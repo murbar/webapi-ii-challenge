@@ -5,9 +5,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    res.status(200).json();
+    const posts = await db.find();
+    res.status(200).json(posts);
   } catch (error) {
-    res.status(500).json();
+    console.log(error);
+    res.status(500).json({ error: 'The posts information could not be retrieved.' });
   }
 });
 
@@ -16,6 +18,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     res.status(200).json();
   } catch (error) {
+    console.log(error);
     res.status(500).json();
   }
 });
@@ -31,6 +34,7 @@ router.post('/', async (req, res) => {
       res.status(201).json(newPost);
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'There was an error while saving the post to the database' });
   }
 });
@@ -40,6 +44,7 @@ router.put('/:id', async (req, res) => {
     const { id } = req.params;
     res.status(200).json();
   } catch (error) {
+    console.log(error);
     res.status(500).json();
   }
 });
@@ -49,6 +54,7 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     res.status(200).json();
   } catch (error) {
+    console.log(error);
     res.status(500).json();
   }
 });
