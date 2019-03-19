@@ -58,10 +58,16 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    res.status(200).json();
+    const [post] = await db.findById(id);
+    if (!post) {
+      res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+    } else {
+      await db.remove(id);
+      res.status(200).json(post);
+    }
   } catch (error) {
     console.log(error);
-    res.status(500).json();
+    res.status(500).json({ error: 'The post could not be removed' });
   }
 });
 
