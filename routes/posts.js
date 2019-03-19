@@ -16,10 +16,16 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    res.status(200).json();
+    // returns array of one post or empty array 🤔
+    const [post] = await db.findById(id);
+    if (!post) {
+      res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+    } else {
+      res.status(200).json(post);
+    }
   } catch (error) {
     console.log(error);
-    res.status(500).json();
+    res.status(500).json({ error: 'The post information could not be retrieved.' });
   }
 });
 
