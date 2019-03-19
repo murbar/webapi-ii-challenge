@@ -3,6 +3,10 @@ const db = require('../data/db');
 
 const router = express.Router();
 
+const isValidPost = post => {
+  return post.title && post.contents;
+};
+
 router.get('/', async (req, res) => {
   try {
     const posts = await db.find();
@@ -32,7 +36,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { body: post } = req;
-    if (!post.title || !post.contents) {
+    if (!isValidPost(post)) {
       res.status(400).json({ errorMessage: 'Please provide title and contents for the post.' });
     } else {
       const { id: newPostId } = await db.insert(post);
@@ -49,7 +53,7 @@ router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { body: postUpdates } = req;
-    if (!postUpdates.title || !postUpdates.contents) {
+    if (!isValidPost(postUpdates)) {
       res.status(400).json({ errorMessage: 'Please provide title and contents for the post.' });
     } else {
       const updatedCount = await db.update(id, postUpdates);
